@@ -7,6 +7,29 @@ var svg = d3.select("svg")
     .attr("width", width)
     .attr("height", height)
 
+// Set up slider.
+var x = d3.scale.linear()
+    .domain([137, 138])
+    .range([margins.left, width - margins.right])
+    .clamp(true);
+
+var brush = d3.svg.brush()
+    .x(x)
+    .extent([0,0])
+    .on("brush", brushed);
+
+function brushed () {
+  var value = brush.extent()[0];
+
+  if (d3.event.sourceEvent) {
+    value = x.invert(d3.mouse(this)[0]);
+    brush.extent([value, value]);
+  }
+
+  handle.attr("cx", x(value));
+  drawSunflower(2 * (value / 360) * Math.PI);
+}
+
 // Let F_n be the nth Fibonacci number. We can prove by
 // induction that \sum_{i=1}^{n}{F_i} = F_{n+2} - 1. Then
 // we choose 376 = F_14 - 1 = \sum{i=1}^{12}{F_i}, because
@@ -15,7 +38,7 @@ var svg = d3.select("svg")
 var NUM_SEEDS = 376;
 
 // See: http://en.wikipedia.org/wiki/Golden_angle
-var GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+var GOLDEN_ANGLE = 180 * (3 - Math.sqrt(5));
 
 // Returns { r: radius, phi: angle } using Vogel's formulas.
 // See: http://algorithmicbotany.org/papers/abop/abop-ch4.pdf
@@ -27,7 +50,7 @@ function placeSeed (n, alpha) {
   return { r: r * Math.cos(phi), phi: r * Math.sin(phi) };
 }
 
-function restart (alpha) {
+function drawSunflower (alpha) {
   var SEED_RADIUS = 5;
 
   // d3.range(start, end) returns the elements from start to end - 1.
@@ -48,16 +71,7 @@ function restart (alpha) {
       .attr("r", SEED_RADIUS)
 }
 
-var x = d3.scale.linear()
-    .domain([0, 180])
-    .range([margins.left, width - margins.right])
-    .clamp(true);
-
-var brush = d3.svg.brush()
-    .x(x)
-    .extent([0,0])
-    .on("brush", brushed);
-
+// Draw the axis.
 svg.append("g")
     .attr("class", "axis")
     .attr("transform", "translate(0," + (5 * height) / 6 + ")")
@@ -71,33 +85,25 @@ svg.append("g")
     .select(function () { return this.parentNode.appendChild(this.cloneNode(true)); })
       .attr("class", "halo");
 
+// Draw the slider.
 var slider = svg.append("g")
     .attr("class", "slider")
     .call(brush);
 
+// Fix the appearance of the slider.
 slider.selectAll(".extent,.resize")
     .remove();
 
 slider.select(".background")
     .attr("height", height);
 
+// Draw the handle.
 var handle = slider.append("circle")
     .attr("class", "handle")
     .attr("transform", "translate(0," + (5 * height) / 6 + ")")
     .attr("r", 10);
 
+// App starts here.
 slider.call(brush.event)
-   .call(brush.extent([137.5, 137.5]))
+   .call(brush.extent([GOLDEN_ANGLE, GOLDEN_ANGLE]))
    .call(brush.event);
-
-function brushed () {
-  var value = brush.extent()[0];
-
-  if (d3.event.sourceEvent) {
-    value = x.invert(d3.mouse(this)[0]);
-    brush.extent([value, value]);
-  }
-
-  handle.attr("cx", x(value));
-  restart(2 * (value / 360) * Math.PI);
-}
