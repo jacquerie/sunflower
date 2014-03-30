@@ -20,17 +20,19 @@ var GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
 
 // Returns { r: radius, phi: angle } using Vogel's formulas.
 // See: http://algorithmicbotany.org/papers/abop/abop-ch4.pdf
-function place (n) {
+function placeSeed (n, alpha) {
   var   C = 7.5,
         r = C * Math.sqrt(n),
-      phi = n * GOLDEN_ANGLE;
+      phi = n * alpha;
 
   return { r: r * Math.cos(phi), phi: r * Math.sin(phi) };
 }
 
-// d3.range(start, end) returns the range from start to end - 1.
-// We add one back to get 376 elements as intended.
-var seeds = d3.range(1, NUM_SEEDS + 1).map(place);
+// d3.range(start, end) returns the elements from start to end - 1.
+// We add back one to have NUM_SEEDS seeds.
+var seeds = d3.range(1, NUM_SEEDS + 1).map(function (n) {
+  return placeSeed(n, GOLDEN_ANGLE);
+});
 
 svg.selectAll("circle")
     .data(seeds)
