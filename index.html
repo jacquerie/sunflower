@@ -1,11 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" prefix="og: http://ogp.me/ns#">
   <head>
     <meta charset="utf-8"/>
     <title>Turing's sunflower</title>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@Jaconotar"/>
+    <meta property="og:title" content="Turing's sunflower"/>
+    <meta property="og:url" content="http://jacquerie.github.io/sunflower/"/>
+    <meta property="og:description" content="In a letter to the zoologist J.Z. Young, British mathematician Alan Turing announced that his theory of embriology could explain, among other things, the connection between leaf arrangements and Fibonacci numbers."/>
+    <meta property="og:image" content="http://jacquerie.github.io/sunflower.png"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
     <link rel="stylesheet" href="css/application.css"/>
+    <link rel="apple-touch-icon-precomposed" href="img/favicon-152.png"/>
+    <script type="text/javascript"
+      src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
   </head>
   <body>
     <div class="container">
@@ -18,7 +29,18 @@
           <li><a href="/">Home</a></li>
           <li class="active">Turing's sunflower</li>
         </ol>
+        <p>In a <a href="http://www.turingarchive.org/viewer/?id=439&title=78a">letter to the zoologist J.Z. Young</a>, British mathematician Alan Turing announced that his theory of embriology could explain, among other things, the connection between leaf arrangements and Fibonacci numbers.</p>
+         <blockquote>At present I am not working on the problem at all, but on my mathematical theory of embriology [...]. This is yielding to treatment, and it will so far as I can see, give satisfactory explanations of -<br/> [...]<br/> 
+iii) Leaf arrangement, in particular the way the Fibonacci series (0, 1, 1 = 2, 3, 5, 8, 13,.......) comes to be involved.</blockquote>
+        <p>A plausible explanation of this fact was given by German physicist Helmut Vogel in <a href="http://dx.doi.org/10.1016%2F0025-5564%2879%2990080-4">"A better Way to Construct the Sunflower Head"</a>, where he proposed that spiral branches of seeds in a sunflower head are added from the center at an angle of \(137.5^{\circ}\) from the preceding one.<p>
         <svg></svg>
+        <p>The interactive visualization shows that even small deviations from this valuedetermine different shapes, not always similar to <a href="ihttp://commons.wikimedia.org/wiki/File:Sonnenblume_H%C3%BCllkelch.JPG">how seeds are arranged in a sunflower</a>. Why \(137.5^{\circ}\)? Vogel postulated that</p>
+        <blockquote>each new branch fits into the largest still-existing gap between older branches, cutting a constant fraction off that gap.</blockquote>
+        <p>Let \(\delta = 2z\pi\) be the angle between two branches. We see that \(z\) can't be a rational, otherwise after enough steps we'd have gaps that will never be filled. Let's instead construct a sequence of rationals \(z_n\) converging to the real \(z\), arbitrarily starting from \(z_0 = \frac{1}{3}\).</p>
+        <p>At the \(n\)-th step we'd have \(z_n = \frac{p_n}{q_n}\), which means, counting from \(0\), that the \(q_n\)-th branch coincides with the \(0\)-th and that we've done \(p_n\) turns around the center.</p>
+        <p>At the \((n + 1)\)-th step the \(q_n\)-th branch cuts a fraction \(z_{n+1}\) off the gap between branch \(0\) and its neighbor, which was \(\frac{z_n}{p_n} = \frac{1}{q_n}\). Thus the \(q_n\)-th branch lies at \(p_n + \frac{z_{n+1}}{q_n} = q_{n}z_{n + 1}\)turns, therefore \[z_{n + 1} = \frac{p_n}{q_n} + \frac{z_{n+1}}{q_n^2} = \frac{p_n}{q_n}\left(1 - \frac{1}{q_n^2}\right)^{-1} = \frac{p_{n}q_{n}}{q_n^2 - 1}\text{.}\]</p>
+        <p>But we also have \(z_{n + 1} = \frac{p_{n + 1}}{q_{n + 1}}\), thus we have the equation \[z_{n + 1} = \frac{p_{n + 1}}{q_{n + 1}} = \frac{p_{n}q_{n}}{q_n^2 - 1}\text{.}\] By substituting \(p_n = F_{2m}\) and \(q_n = F_{2m + 2}\), consecutive Fibonacci numbers of even order, the previous equation becomes \[F_{2m + 2}^2 - 1 = F_{2m}F_{2m + 4}\text{,}\] which follows from <a href="http://mathworld.wolfram.com/CassinisIdentity.html">Cassini's Identity</a>.</p>
+        <p>Thus, when \(n\rightarrow\infty\), we have that \(z_n\rightarrow \varphi^{-2}\) where \(\varphi = \frac{1 + \sqrt{5}}{2}\), the golden ratio, because it is well known that the ratio of consecutive Fibonacci numbers tends to \(\varphi\). Therefore \[\delta = 2\varphi^{-2}\pi = 137.5^{\circ}\text{.}\]</p>
       </div>
       <footer>
         <hr/>
@@ -31,5 +53,14 @@
     </div>
     <script src="js/d3.v3.min.js"></script>
     <script src="js/application.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-48140066-1', 'jacquerie.github.io');
+      ga('send', 'pageview');
+    </script>
   </body>
 </html>
