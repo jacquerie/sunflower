@@ -1,7 +1,7 @@
 // Set up SVG for D3.
 var margins = { left: 35, right: 35 },
     width = 570,
-    height = 550;
+    height = 427.5;
 
 var svg = d3.select("svg")
     .attr("width", width)
@@ -30,12 +30,10 @@ function brushed () {
   drawSunflower(2 * (value / 360) * Math.PI);
 }
 
-// Let F_n be the nth Fibonacci number. We can prove by
-// induction that \sum_{i=1}^{n}{F_i} = F_{n+2} - 1. Then
-// we choose 376 = F_14 - 1 = \sum{i=1}^{12}{F_i}, because
-// the outer rim of a sunflower usually has F_12 = 144 seeds.
-// See: http://www.proofwiki.org/wiki/Sum_of_Sequence_of_Fibonacci_Numbers
-var NUM_SEEDS = 376;
+// We choose 714 = 21 * 34 because we expect to see 34 spirals in
+// one direction and 21 in the opposite, so we choose a number that
+// is divisible by both.
+var NUM_SEEDS = 714;
 
 // See: http://en.wikipedia.org/wiki/Golden_angle
 var GOLDEN_ANGLE = 180 * (3 - Math.sqrt(5));
@@ -43,7 +41,7 @@ var GOLDEN_ANGLE = 180 * (3 - Math.sqrt(5));
 // Returns { r: radius, phi: angle } using Vogel's formulas.
 // See: http://algorithmicbotany.org/papers/abop/abop-ch4.pdf
 function placeSeed (n, alpha) {
-  var   C = 7.5,
+  var   C = 5,
         r = C * Math.sqrt(n),
       phi = n * alpha;
 
@@ -51,7 +49,7 @@ function placeSeed (n, alpha) {
 }
 
 function drawSunflower (alpha) {
-  var SEED_RADIUS = 5;
+  var SEED_RADIUS = 2.5;
 
   // d3.range(start, end) returns the elements from start to end - 1.
   // We add back one to have NUM_SEEDS seeds.
@@ -67,14 +65,14 @@ function drawSunflower (alpha) {
     .enter().append("circle")
       .attr("class", "seed")
       .attr("cx", function(d) { return width / 2 + d.r; })
-      .attr("cy", function(d) { return height / 2 + d.phi; })
+      .attr("cy", function(d) { return 5 * height / 12 + d.phi; })
       .attr("r", SEED_RADIUS)
 }
 
 // Draw the axis.
 svg.append("g")
     .attr("class", "axis")
-    .attr("transform", "translate(0," + (5 * height) / 6 + ")")
+    .attr("transform", "translate(0," + (10 * height) / 12 + ")")
     .call(d3.svg.axis()
       .scale(x)
       .orient("bottom")
@@ -100,7 +98,7 @@ slider.select(".background")
 // Draw the handle.
 var handle = slider.append("circle")
     .attr("class", "handle")
-    .attr("transform", "translate(0," + (5 * height) / 6 + ")")
+    .attr("transform", "translate(0," + (10 * height) / 12 + ")")
     .attr("r", 10);
 
 // App starts here.
