@@ -5,7 +5,7 @@ var margins = { left: 35, right: 35 },
 
 var svg = d3.select("svg")
     .attr("width", width)
-    .attr("height", height)
+    .attr("height", height);
 
 // Set up slider.
 var x = d3.scale.linear()
@@ -66,7 +66,7 @@ function drawSunflower (alpha) {
       .attr("class", "seed")
       .attr("cx", function(d) { return width / 2 + d.r; })
       .attr("cy", function(d) { return 5 * height / 12 + d.phi; })
-      .attr("r", SEED_RADIUS)
+      .attr("r", SEED_RADIUS);
 }
 
 // Draw the axis.
